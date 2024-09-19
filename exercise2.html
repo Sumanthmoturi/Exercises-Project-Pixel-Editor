@@ -1,0 +1,48 @@
+<div></div>
+<script>
+  PictureCanvas.prototype.syncState = function(picture) {
+    if (this.picture == picture) return;    //No changes,do nothing
+    //1.Updating only changed pixels
+    if (this.picutre && this.picture.width==picture.width && this.picture.height==height) {
+      updatePicture(this.picture,picture,this.dom,scale); //update only changed pixels when same size
+    } else {                          //full redraw when size changes
+      this.picture=picture
+      drawPicture(picture,ths.dom,scale);
+    }
+    this.picture = picture;
+    drawPicture(picture, this.dom, scale);
+  };
+
+  //2.New function to update only changed pixels 
+  function updatePicture(oldPicture,newPicture,canvas,scale) {
+    let cx=canvas.getContext("2d");
+    for (let y=o;y<newPicture.height;y++) {
+      for (let x=0;x<newPicture.width;y++) {
+        let oldColor=oldPicture.pixel(x,y)
+        let newColor=newPicture.pixel(x,y)
+        if (oldColor!=newColor) {
+          //only update pixels that changed
+          cx.fillStyle=newColor;
+          cx.fillRect(x*scale,y*scale,scale,scale);
+        }
+      }
+    }
+  }
+
+  //original function modified to accept an optional old picture
+  function drawPicture(picture, canvas, scale) {
+    canvas.width = picture.width * scale;
+    canvas.height = picture.height * scale;
+    let cx = canvas.getContext("2d");
+
+    for (let y = 0; y < picture.height; y++) {
+      for (let x = 0; x < picture.width; x++) {
+        cx.fillStyle = picture.pixel(x, y);
+        cx.fillRect(x * scale, y * scale, scale, scale);
+      }
+    }
+  }
+
+  document.querySelector("div")
+    .appendChild(startPixelEditor({}));
+</script>

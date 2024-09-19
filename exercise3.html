@@ -1,0 +1,41 @@
+<div></div>
+<script>
+  //Circle tool
+  function circle(pos, state, dispatch) {
+    //1.function to draw a circle tool
+    function drawCircle(to) {
+        //2.Calclating radius of circle bt pythagorous theorem
+        let radius=Math.sqrt((to.x-pos.x) **2 + (to.y-pos.y) **2)
+        //3.round radius to ensure complete coverage
+        let radiusC=Math.ceil(radius)
+        let drawn=[]  //4.Array to store pixels to be colored
+        //5.Loop over square bounding box around circle
+        for (let dy=-radiusC;dy<=radiusC;dy++) {
+            for (let dx=-radiusC;dx<=-radiusC;dx++) {
+                //calculate distance form circle center
+                let dist=Math.sqrt(dx **2 +dy **2)
+                //skip pixels outdie circle radius
+                if (dist>radius) continue;
+                //calculate pixel coordinates
+                let y=pos.y+dy , x=pos.x+dx;
+                //ensure pixel is within canvas inbounds
+                if(y<0 || y>=state.picute.height || x<0 || x>=state.picture.width) continue;
+                //adding pixel to drawn array
+                drawn.push({x,y,color:state.color})
+
+            }
+        }
+        //6.updating picture with new pixels
+        dispatch({picture: state.picture.draw(drawn)})
+    }
+    //7.Draw circle at initial position
+    drawCircle(pos);
+    //8.return circle for continous drawing while dragging
+    return drawCircle
+  }
+
+  let dom = startPixelEditor({
+    tools: Object.assign({},baseTools, {circle})
+  });
+  document.querySelector("div").appendChild(dom);
+</script>
